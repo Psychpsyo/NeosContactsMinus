@@ -1,4 +1,5 @@
 ![](https://user-images.githubusercontent.com/60073468/227840108-37711ecf-eb04-4cbf-ab83-0013f762e183.png)
+<sub>* The Contacts- mod does not actually support displaying the *Hidden*, Contacts- Worlds.</sub>
 # Contacts-
 
 This is a mod that adds the option for you to be in Contacts- Sessions in Neos!  
