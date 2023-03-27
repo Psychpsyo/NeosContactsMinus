@@ -7,8 +7,8 @@
     <ProjectGuid>{EAF7069A-7CFA-42F0-8390-5F3D7EC21F72}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ShutTheFuckUp</RootNamespace>
-    <AssemblyName>ShutTheFuckUp</AssemblyName>
+    <RootNamespace>ContactsMinus</RootNamespace>
+    <AssemblyName>ContactsMinus</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
