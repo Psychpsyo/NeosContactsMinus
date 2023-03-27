@@ -15,12 +15,6 @@ namespace ContactsMinus
         public override string Version => "1.0.0";
         public override string Link => "https://github.com/Psychpsyo/NeosContactsMinus";
 
-        public static void RejectJoin(World world, JoinRequestData joinRequest)
-        {
-            MethodInfo rejectJoin = world.GetType().GetMethod("RejectJoin", BindingFlags.NonPublic | BindingFlags.Instance);
-            rejectJoin.Invoke(world, new object[] { joinRequest.connection, "Only non-contacts of users in the session are allowed to join\n(World is set to Contacts-)" });
-        }
-
         [AutoRegisterConfigKey]
         public static ModConfigurationKey<bool> modActive = new ModConfigurationKey<bool>("Set Hosted Worlds to Contacts-", "This sets every world you are currently hosting to Contacts-.", () => false);
 
@@ -35,25 +29,19 @@ namespace ContactsMinus
 
         [HarmonyPatch(typeof(World), "VerifyJoinRequest")]
         class ContactsChecker {
-            static async Task<bool> Prefix(World __instance, JoinRequestData joinRequest) {
+            static async Task<JoinGrant> Postfix(Task<JoinGrant> __result, World __instance, JoinRequestData joinRequest)
+            {
                 if (!config.GetValue(modActive))
-                {
-                    return true;
-                }
+                    return await __result;
 
                 // this is the Contacts+ (SessionAccessLevel.FriendsOfFriends) checks from the original function, just inverted.
                 if (string.IsNullOrEmpty(joinRequest.userID))
-                    return true;
+                    return await __result;
                 if (__instance.Engine.Cloud.Friends.IsFriend(joinRequest.userID))
-                {
-                    RejectJoin(__instance, joinRequest);
-                    return false;
-                }
-                string id1 = await __instance.Session.RequestContactCheckKey(joinRequest.connection).ConfigureAwait(false);
+                    return JoinGrant.Deny("Only non-contacts of users in the session are allowed to join\n(World is set to Contacts-)");
+                string id1 = __instance.Session.RequestContactCheckKey(joinRequest.connection).Result;
                 if (!OneTimeVerificationKey.IsValidId(id1))
-                {
-                    return true;
-                }
+                    return await __result;
                 CheckContactData data = new CheckContactData();
                 data.OwnerId = joinRequest.userID;
                 data.VerificationKey = id1;
@@ -65,13 +53,10 @@ namespace ContactsMinus
                     if (!user.IsHost && user.UserID != null)
                         data.Contacts.Add(user.UserID);
                 }
-                if ((await __instance.Engine.Cloud.CheckContact(data).ConfigureAwait(false)).Entity) {
-                    RejectJoin(__instance, joinRequest);
-                    return false;
-                }
+                if (__instance.Engine.Cloud.CheckContact(data).Result.Entity)
+                    return JoinGrant.Deny("Only non-contacts of users in the session are allowed to join\n(World is set to Contacts-)");
 
-                // regular checks still need to be done.
-                return true;
+                return await __result;
             }
         }
     }
