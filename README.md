@@ -5,6 +5,8 @@
 This is a mod that adds the option for you to be in Contacts- Sessions in Neos!  
 That's right! Only people who **aren't** friends of someone in the session can join! - Isn't that fancy?  
 
+But keep in mind that you'll need to inform others of the contacts-minusness of your world manually since the mod can't make other people's clients display it in the contacts menu.  
+
 # Installation
 
 To use this mod, you will need the [NeosModLoader](https://github.com/zkxs/NeosModLoader) and a settings mod of your choice, such as [NeosModSettings](https://github.com/badhaloninja/NeosModSettings/releases/latest/download/NeosModSettings.dll).  
